@@ -2,7 +2,7 @@
 from cmd import Cmd
 import urllib.parse, argparse
 
-parser = argparse.ArgumentParser(description="Release the bagels.")
+parser = argparse.ArgumentParser(description="Generate SSTI payloads... One character at a time.")
 parser.add_argument("-u","--url-encode", action="store_true", help="URL Encode")
 args = parser.parse_args()
 
