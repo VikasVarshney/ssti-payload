@@ -4,7 +4,7 @@ import urllib.parse, argparse
 
 parser = argparse.ArgumentParser(description="Generate SSTI payloads... One character at a time.")
 parser.add_argument("-u","--url-encode", action="store_true", help="URL Encode")
-parser.add_argument("-p","--prefix", type=ascii, help="Modify Payload Prefix")
+parser.add_argument("-p","--prefix", type=ascii, help="Modify Prefix")
 args = parser.parse_args()
 
 url_encode=args.url_encode

@@ -6,7 +6,7 @@ from time import gmtime, strftime
 parser = argparse.ArgumentParser(description="RCE.")
 parser.add_argument("-t", "--target",metavar="",required=True,help="Target to give an STI")
 parser.add_argument("-u","--url-encode", action="store_true", help="URL Encode")
-parser.add_argument("-p","--prefix", type=ascii, help="Modify Payload Prefix")
+parser.add_argument("-p","--prefix", type=ascii, help="Modify Prefix")
 parser.add_argument("-d","--debug", action="store_true",default=False, help="Print debug")
 args = parser.parse_args()
 
