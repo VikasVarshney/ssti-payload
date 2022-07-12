@@ -8,9 +8,9 @@ The string is converted into a decimal value and then concatenated together. Thi
 
 USAGE (help)
 =============
-Use the flag `-h` or `--help` to show the help message.
-The `-u` or `--url-encode` flag is passed to url encode the payload
-The `-p` or `--prefix` flag is used to change the default prefix of the payload, the default is "$"
+Use the flag `-h` or `--help` to show the help message.  
+The `-u` or `--url-encode` flag is passed to url encode the payload  
+The `-p` or `--prefix` flag is used to change the default prefix of the payload, the default is "$"  
 
 Examples are found below;
 
