@@ -48,4 +48,9 @@ Example command:
 
 Depending on the response, the `ssti=str(output).split('&#39;')[1].rstrip()` variable will probably have to be changed to suit the response. No clever logic was implemented for this :)
 
+It is now possible to make post request using the parameter `-p` / `--post-data` with a "KEY=VALUE" pattern, and the last one will be the one injected.
+
+Example command:
+
+```python3 ssti-skel.py -t 'https://example.com/path' -p name=admin id=1 paramthatwillgetthepayload=a```
 
